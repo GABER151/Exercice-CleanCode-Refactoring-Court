@@ -1,5 +1,10 @@
 package com.github.glo2003.payroll;
 
+import com.github.glo2003.payroll.employees.Employee;
+import com.github.glo2003.payroll.exceptions.EmployeeDoesNotWorkHereException;
+import com.github.glo2003.payroll.exceptions.InvalidRaiseException;
+import com.github.glo2003.payroll.exceptions.NoEmployeeException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,17 +23,8 @@ public class CompanyPayroll {
     }
 
     public void createPendingPaychecks() {
-        for (Employee e : employees) {
-            if (e instanceof HourlyEmployee) {
-                HourlyEmployee he = (HourlyEmployee) e;
-                pendingPaychecks.add(new Paycheck(e.getName(), he.getWorkedHoursFor2Weeks() * he.getHourlyRate()));
-            } else if (e instanceof SalariedEmployee) {
-                SalariedEmployee se = (SalariedEmployee) e;
-                pendingPaychecks.add(new Paycheck(e.getName(), ((SalariedEmployee) e).getBiweeklySalary()));
-            } else {
-                throw new RuntimeException("something happened");
-            }
-        }
+        for(Employee e: employees)
+            pendingPaychecks.add(new Paycheck(e.getName(), e.getPayForTwoWeeks()));
     }
 
     public void processPendingPaychecks() {
@@ -39,48 +35,40 @@ public class CompanyPayroll {
     }
 
     public List<Employee> findEngineers() {
-        return findByRole("engineer");
+        return findByRole(Role.ENGINEER);
     }
 
     public List<Employee> findManagers() {
-        return findByRole("manager");
+        return findByRole(Role.MANAGER);
     }
 
     public List<Employee> findVicePresidents() {
-        return findByRole("vp");
+        return findByRole(Role.VICE_PRESIDENT);
     }
 
     public List<Employee> findInterns() {
-        return findByRole("intern");
+        return findByRole(Role.INTERN);
     }
 
-    private List<Employee> findByRole(String role) {
+    private List<Employee> findByRole(Role role) {
         return employees.stream()
                 .filter(e -> e.getRole().equals(role))
                 .collect(Collectors.toList());
     }
 
-    public void giveRaise(Employee e, float raise) {
+    public void giveRaise(Employee e, float raise) throws InvalidRaiseException, EmployeeDoesNotWorkHereException{
         if (raise < 0) {
-            throw new RuntimeException("oh no");
+            throw new InvalidRaiseException(raise);
         }
         if (!employees.contains(e)) {
-            throw new RuntimeException("not here");
+            throw new EmployeeDoesNotWorkHereException(e);
         }
-        if (e instanceof HourlyEmployee) {
-            HourlyEmployee he = (HourlyEmployee) e;
-            he.setHourlyRate(he.getHourlyRate() + raise);
-        } else if (e instanceof SalariedEmployee) {
-            SalariedEmployee se = (SalariedEmployee) e;
-            se.setBiweeklySalary(se.getBiweeklySalary() + raise);
-        } else {
-            throw new RuntimeException("something happened");
-        }
+        e.giveRaise(raise);
     }
 
     public float getAveragePendingPaycheck() throws Exception {
         if (pendingPaychecks.size() == 0) {
-            throw new Exception("There is no employee");
+            throw new NoEmployeeException();
         }
         float totalMoney = getTotalMoney();
         return totalMoney / pendingPaychecks.size();

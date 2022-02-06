@@ -1,25 +1,15 @@
-package com.github.glo2003.payroll;
+package com.github.glo2003.payroll.employees;
+
+import com.github.glo2003.payroll.Role;
 
 public class HourlyEmployee extends Employee {
     private final float workedHoursFor2Weeks;
     private float hourlyRate;
 
-    public HourlyEmployee(String name, String role, float hourlyRate, float workedHoursFor2Weeks) {
+    public HourlyEmployee(String name, Role role, float hourlyRate, float workedHoursFor2Weeks) {
         super(name, role);
         this.hourlyRate = hourlyRate;
         this.workedHoursFor2Weeks = workedHoursFor2Weeks;
-    }
-
-    public float getHourlyRate() {
-        return hourlyRate;
-    }
-
-    public void setHourlyRate(float hourlyRate) {
-        this.hourlyRate = hourlyRate;
-    }
-
-    public float getWorkedHoursFor2Weeks() {
-        return workedHoursFor2Weeks;
     }
 
     @Override
@@ -30,5 +20,15 @@ public class HourlyEmployee extends Employee {
                 ", hourlyRate=" + hourlyRate +
                 ", workedHoursFor2Weeks=" + workedHoursFor2Weeks +
                 '}';
+    }
+
+    @Override
+    public float getPayForTwoWeeks(){
+        return workedHoursFor2Weeks * hourlyRate;
+    }
+
+    @Override
+    public void giveRaise(float raise){
+        hourlyRate += raise;
     }
 }
