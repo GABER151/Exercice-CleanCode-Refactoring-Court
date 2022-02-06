@@ -10,36 +10,36 @@ public class Main {
     public static void main(String[] args) {
         CompanyPayroll companyPayroll = new CompanyPayroll();
 
-        Employee e1 = new HourlyEmployee("Alice", "vp", 25, 100, 35.5f * 4);
-        Employee e2 = new SalariedEmployee("Bob", "engineer", 4, 1500);
-        Employee e3 = new SalariedEmployee("Charlie", "manager", 4, 2000);
-        Employee e4 = new HourlyEmployee("Ernest", "intern", 1, 5, 50 * 4);
-        Employee e5 = new HourlyEmployee("Fred", "intern", 1, 5, 50 * 4);
+        Employee employee1 = new HourlyEmployee("Alice", "vp", 25, 100, 35.5f * 4);
+        Employee employee2 = new SalariedEmployee("Bob", "engineer", 4, 1500);
+        Employee employee3 = new SalariedEmployee("Charlie", "manager", 4, 2000);
+        Employee employee4 = new HourlyEmployee("Ernest", "intern", 1, 5, 50 * 4);
+        Employee employee5 = new HourlyEmployee("Fred", "intern", 1, 5, 50 * 4);
 
-        companyPayroll.addEmp(e1);
-        companyPayroll.addEmp(e2);
-        companyPayroll.addEmp(e3);
-        companyPayroll.addEmp(e4);
-        companyPayroll.addEmp(e5);
+        companyPayroll.addEmployee(employee1);
+        companyPayroll.addEmployee(employee2);
+        companyPayroll.addEmployee(employee3);
+        companyPayroll.addEmployee(employee4);
+        companyPayroll.addEmployee(employee5);
 
         System.out.println("----- Listing employees -----");
-        companyPayroll.find_Vice_Presidents().forEach(System.out::println);
-        companyPayroll.findMgs().forEach(System.out::println);
-        companyPayroll.findSWE().forEach(System.out::println);
-        companyPayroll.find_interns().forEach(System.out::println);
+        companyPayroll.findVicePresidents().forEach(System.out::println);
+        companyPayroll.findManagers().forEach(System.out::println);
+        companyPayroll.findSoftwareEngineer().forEach(System.out::println);
+        companyPayroll.findInterns().forEach(System.out::println);
 
         System.out.println("----- Giving raises -----");
-        companyPayroll.salaryRaise(e1, 10);
-        companyPayroll.salaryRaise(e2, 100);
+        companyPayroll.giveSalaryRaise(employee1, 10);
+        companyPayroll.giveSalaryRaise(employee2, 100);
 
         System.out.println("\n----- Create paychecks -----");
         companyPayroll.createPending();
 
         System.out.println("\n----- Pay statistics -----");
-        float t = companyPayroll.getTotalmoney();
+        float totalMoney = companyPayroll.getTotalmoney();
         System.out.println("Total money spent: ");
-        float avg = companyPayroll.avgPayCehck_pending();
-        System.out.println("Average paycheck: " + avg);
+        float avgPayCheck = companyPayroll.getAvgPayCheckPending();
+        System.out.println("Average paycheck: " + avgPayCheck);
 
         System.out.println("\n----- Pay -----");
         companyPayroll.processPending();
